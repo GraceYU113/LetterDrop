@@ -25,4 +25,5 @@ use letter.style.animationDuration = '${3/speedMultiplier}';
 3) Some reward 'letter', maybe in pink color, if u type it, u'll gey 2 scores. */
 4）Add background music if possible
 
-/* problem to be solved: 'Game over' show-up in a more vivid way.*/
+/* problem to be solved： 'Game over' show-up in a more vivid way.*/
+--> do no use alert() when game ends, adds a overlay in the game container. 

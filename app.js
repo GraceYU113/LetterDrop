@@ -6,6 +6,8 @@ let score = 0;
 let missed = 0;
 const maxMissed = 5;
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+let gameOver = false
+
 
 let lastTime = null;
 let letterTimer = 0;
@@ -40,6 +42,8 @@ function createFallingLetter() {
 }
 
 document.addEventListener("keydown", (e) => {
+  if (gameOver) return;
+
   const pressedKey = e.key.toUpperCase();
   const fallingLetters = document.querySelectorAll(".letter");
 
@@ -57,14 +61,35 @@ function updateStats() {
   scoreEl.textContent = score;
   missedEl.textContent = missed;
 
-  if (missed >= maxMissed) {
-    alert(`Game Over!\nFinal Score: ${score}`);
-    location.reload();
+if (missed >= maxMissed && !gameOver) {
+    gameOver = true;
+    showGameOver();
   }
+}
+
+// display ‘Game-over’ overlay
+function showGameOver() {
+  const overlay = document.createElement("div");
+  overlay.id = "game-over";
+
+  const title = document.createElement("h1");
+  title.textContent = "Game Over";
+
+  const scoreText = document.createElement("p");
+  scoreText.textContent = `Final Score: ${score}`;
+
+  overlay.appendChild(title);
+  overlay.appendChild(scoreText);
+  gameContainer.appendChild(overlay);
+
+  // remove remaining letters
+  document.querySelectorAll(".letter").forEach(letter => letter.remove());
 }
 
 // game loop for requestAnimationFrame
 function gameLoop(timestamp) {
+  if (gameOver) return; //stop generateing new letters after game over
+
   if (lastTime != null) {
     const delta = timestamp - lastTime;
     letterTimer += delta;
@@ -76,7 +101,7 @@ function gameLoop(timestamp) {
 
     if (timestamp / 1000 > speedMultiplier * 5) {
       speedMultiplier += 0.2;
-      letterInterval = Math.max(200, letterInterval - 20); // 最短间隔 200ms
+      letterInterval = Math.max(200, letterInterval - 20); // litime the min interval to 200ms
     }
   }
 
