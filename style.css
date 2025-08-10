@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  user-select: none;   /*user cannot select & highlight anything on the screen*/
 }
 
 body {
@@ -44,7 +45,9 @@ header h1 {
   font-weight: 400;
   color: #4dd7bc;
   font-family: 'Press Start 2P', monospace;
-  animation: fall 5s linear forwards;
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 @keyframes fall {
