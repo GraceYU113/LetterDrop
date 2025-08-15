@@ -1,3 +1,8 @@
+const startScreen = document.getElementById("start-screen");
+const playBtn = document.getElementById("play-btn");
+const guidanceBtn = document.getElementById("guidance-btn");
+const guidanceText = document.getElementById("guidance-text");
+
 const gameContainer = document.getElementById("game-container");
 const scoreEl = document.getElementById("score");
 const missedEl = document.getElementById("missed");
@@ -40,22 +45,6 @@ function createFallingLetter() {
     }
   });
 }
-
-document.addEventListener("keydown", (e) => {
-  if (gameOver) return;
-
-  const pressedKey = e.key.toUpperCase();
-  const fallingLetters = document.querySelectorAll(".letter");
-
-  for (let letter of fallingLetters) {
-    if (letter.dataset.char === pressedKey) {
-      gameContainer.removeChild(letter);
-      score++;
-      updateStats();
-      return;
-    }
-  }
-});
 
 function updateStats() {
   scoreEl.textContent = score;
@@ -109,4 +98,43 @@ function gameLoop(timestamp) {
   requestAnimationFrame(gameLoop);
 }
 
-requestAnimationFrame(gameLoop);
+function startGame() {
+  score = 0;
+  missed = 0;
+  gameOver = false;
+  updateStats();
+
+  lastTime = null;
+  letterTimer = 0;
+  speedMultiplier = 1;
+  letterInterval = 700;
+
+   gameContainer.innerHTML = ""; //clean up gaming zone
+  requestAnimationFrame(gameLoop);
+}
+
+playBtn.addEventListener("click", () => {
+  startScreen.style.display = "none";
+  startGame();
+});
+
+guidanceBtn.addEventListener("click", () => {
+  guidanceText.style.display =
+    guidanceText.style.display === "none" ? "block" : "none";
+});
+
+document.addEventListener("keydown", (e) => {
+  if (gameOver) return;
+
+  const pressedKey = e.key.toUpperCase();
+  const fallingLetters = document.querySelectorAll(".letter");
+
+  for (let letter of fallingLetters) {
+    if (letter.dataset.char === pressedKey) {
+      gameContainer.removeChild(letter);
+      score++;
+      updateStats();
+      return;
+    }
+  }
+});

@@ -94,3 +94,58 @@ header h1 {
   100% { transform: scale(1.5); opacity: 1; }
 }
 
+/* Start Screen */
+#start-screen {
+  background-color: #000;
+  color: #fff;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif, cursive;
+  padding-top: 10px;
+}
+
+#start-screen .title {
+  font-size: 100px;
+  margin-bottom: 120px;
+  color: #ff3366;
+}
+
+.pixel-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 20px;
+  padding: 15px 30px 40px;
+  margin: 10px;
+  width: 220px;
+  height: 70px;
+  background-color: #ff3366;
+  border: 4px solid #660033;
+  color: white;
+  cursor: pointer;
+  box-shadow: 4px 4px #660033;
+}
+
+#guidance-btn {
+  background-color: #00ffcc;
+  border: 4px solid #00665f;
+  box-shadow: 4px 4px #00665f;
+}
+
+.pixel-btn:active {
+  box-shadow: none;
+  transform: translate(4px, 4px);
+}
+
+#guidance-text {
+  margin-top: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 500px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+
