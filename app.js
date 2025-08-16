@@ -7,13 +7,15 @@ const gameContainer = document.getElementById("game-container");
 const scoreEl = document.getElementById("score");
 const missedEl = document.getElementById("missed");
 
+//Game status variables control
 let score = 0;
 let missed = 0;
 const maxMissed = 5;
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 let gameOver = false
+let gameStartTime = null;
 
-
+//Time variables control
 let lastTime = null;
 let letterTimer = 0;
 let letterInterval = 700; // initial time interval (700 ms)
@@ -28,14 +30,15 @@ function createFallingLetter() {
   letter.textContent = char;
 
   // Random location
-  letter.style.left = `${Math.random() * 90}%`;
-  letter.style.top = `-50px`;
+  letter.style.left = `${Math.random() * 90}%`; //randowm location
+  letter.style.top = `-50px`; //initial location out of screen
 
   letter.style.animationDuration = `${3 / speedMultiplier}s`; // speed multiplier
 
 
-  gameContainer.appendChild(letter);
-  letter.dataset.char = char;
+  gameContainer.appendChild(letter); //Add to game zone
+  letter.dataset.char = char; //Stores the generated letter in the element’s data-char attribute so it can be easily identified later when checking key presses.
+
 
   letter.addEventListener("animationend", () => {
     if (gameContainer.contains(letter)) {
@@ -77,7 +80,12 @@ function showGameOver() {
 
 // game loop for requestAnimationFrame
 function gameLoop(timestamp) {
-  if (gameOver) return; //stop generateing new letters after game over
+  if (gameOver) return;
+
+  if (!gameStartTime) {
+    gameStartTime = timestamp; // The time to call time
+  }
+  const elapsed = (timestamp - gameStartTime) / 1000; 
 
   if (lastTime != null) {
     const delta = timestamp - lastTime;
@@ -88,15 +96,16 @@ function gameLoop(timestamp) {
       letterTimer = 0;
     }
 
-    if (timestamp / 1000 > speedMultiplier * 5) {
+    if (elapsed > speedMultiplier * 5) {
       speedMultiplier += 0.2;
-      letterInterval = Math.max(200, letterInterval - 20); // litime the min interval to 200ms
+      letterInterval = Math.max(200, letterInterval - 20);
     }
   }
 
- lastTime = timestamp;
+  lastTime = timestamp;
   requestAnimationFrame(gameLoop);
 }
+
 
 function startGame() {
   score = 0;
@@ -109,24 +118,24 @@ function startGame() {
   speedMultiplier = 1;
   letterInterval = 700;
 
-   gameContainer.innerHTML = ""; //clean up gaming zone
-  requestAnimationFrame(gameLoop);
-}
+   gameContainer.innerHTML = ""; //Replace all of the existing content in gomeContainer with new string, here I want to replace with empty string
+  requestAnimationFrame(gameLoop);//make sure only play button is been clicked, the game will load
+  }
 
 playBtn.addEventListener("click", () => {
-  startScreen.style.display = "none";
+  startScreen.style.display = "none"; //when the play button is pressed, hide the starting page
   startGame();
 });
 
 guidanceBtn.addEventListener("click", () => {
   guidanceText.style.display =
-    guidanceText.style.display === "none" ? "block" : "none";
-});
+    guidanceText.style.display === "none" ? "block" : "none"; //Ternary operator ?:  --> ‘toggle’ effect: Checks whether the guidance text is currently hidden ("none").
+});  //If it is hidden, change it to "block" (make it visible). If it is visible, change it back to "none" (hide it again).
 
 document.addEventListener("keydown", (e) => {
   if (gameOver) return;
 
-  const pressedKey = e.key.toUpperCase();
+  const pressedKey = e.key.toUpperCase(); //gets the character of the pressed key, converts it to uppercase, and compares it with the falling letters
   const fallingLetters = document.querySelectorAll(".letter");
 
   for (let letter of fallingLetters) {

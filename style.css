@@ -46,14 +46,14 @@ header h1 {
   color: #4dd7bc;
   font-family: 'Press Start 2P', monospace;
   animation-name: fall;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
+  animation-timing-function: linear; /*linear: Maintains a constant speed from start to finish. Other types such as ease (default: start slow then accelerates*/
+  animation-fill-mode: forwards; /*keep the final state after the animation ends, which is at bottom & invisible(opacity=0) rather than from the top*/
 }
 
 @keyframes fall {
   to {
-    top: 90%;
-    opacity: 0;
+    top: 90%; 
+    opacity: 0; /*make the letter invisible when it falls doen 90% from the top*/
   }
 }
 
@@ -68,7 +68,7 @@ header h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 999; /*easy way to ensure elements always on top*/
 }
 
 #game-over h1 {
@@ -134,7 +134,7 @@ header h1 {
   box-shadow: 4px 4px #00665f;
 }
 
-.pixel-btn:active {
+.pixel-btn:active { /*responsive: when the button is being clicked, no shawdow and the button moves to right & down a bit*/
   box-shadow: none;
   transform: translate(4px, 4px);
 }
