@@ -70,8 +70,18 @@ function showGameOver() {
   const scoreText = document.createElement("p");
   scoreText.textContent = `Final Score: ${score}`;
 
+  const restartBtn = document.createElement("button");
+  restartBtn.textContent = "RESTART";
+  restartBtn.classList.add("pixel-btn", "restart-btn");
+  restartBtn.addEventListener("click", () => {
+    overlay.remove();                // remove game over layer
+    gameContainer.innerHTML = "";    // clear the game area
+    startScreen.style.display = "flex"; // show main menu (Play/Guidance)
+});
+
   overlay.appendChild(title);
   overlay.appendChild(scoreText);
+  overlay.appendChild(restartBtn);
   gameContainer.appendChild(overlay);
 
   // remove remaining letters
