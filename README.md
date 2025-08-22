@@ -6,6 +6,7 @@ The player must type the correct key on the keyboard to catch the letter.
 
 - **Win / Lose Condition**:  
   If the player misses or fails to type the correct key 5 times, the game ends and the final score is displayed.  
+  Pay attention: the grey letters are danger letters. Once the player clicks it, the game ends immediately!
 - **Background**:  
   Designed to replace boring typing drills with a more engaging activity, similar to *Fruit Ninja*.
 

@@ -50,6 +50,10 @@ header h1 {
   animation-fill-mode: forwards; /*keep the final state after the animation ends, which is at bottom & invisible(opacity=0) rather than from the top*/
 }
 
+.letter.danger {
+  color: rgba(128, 128, 128, 0.912);
+}
+
 @keyframes fall {
   to {
     top: 90%; 

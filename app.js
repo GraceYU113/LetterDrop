@@ -22,24 +22,26 @@ let letterInterval = 700; // initial time interval (700 ms)
 let speedMultiplier = 1;  // fall speed multiplier, increases with time
 
 
-//Generate random letter
 function createFallingLetter() {
   const letter = document.createElement("div");
   const char = letters[Math.floor(Math.random() * letters.length)];
   letter.classList.add("letter");
   letter.textContent = char;
 
+  // Randomly mark some letters as dangerous (20% chance)
+  if (Math.random() < 0.2) {
+    letter.classList.add("danger");
+  }
+
   // Random location
-  letter.style.left = `${Math.random() * 90}%`; //randowm location
-  letter.style.top = `-50px`; //initial location out of screen
+  letter.style.left = `${Math.random() * 90}%`;
+  letter.style.top = `-50px`;
+  letter.style.animationDuration = `${3 / speedMultiplier}s`;
 
-  letter.style.animationDuration = `${3 / speedMultiplier}s`; // speed multiplier
+  gameContainer.appendChild(letter);
+  letter.dataset.char = char;
 
-
-  gameContainer.appendChild(letter); //Add to game zone
-  letter.dataset.char = char; //Stores the generated letter in the element’s data-char attribute so it can be easily identified later when checking key presses.
-
-
+  // When letter reaches the bottom without being caught
   letter.addEventListener("animationend", () => {
     if (gameContainer.contains(letter)) {
       gameContainer.removeChild(letter);
@@ -47,7 +49,20 @@ function createFallingLetter() {
       updateStats();
     }
   });
+
+  // Mouse click on a letter
+  letter.addEventListener("click", () => {
+    if (letter.classList.contains("danger")) {
+      showGameOver();
+      gameOver = true;
+    } else {
+      score++;
+      updateStats();
+      letter.remove();
+    }
+  });
 }
+
 
 function updateStats() {
   scoreEl.textContent = score;
@@ -73,11 +88,12 @@ function showGameOver() {
   const restartBtn = document.createElement("button");
   restartBtn.textContent = "RESTART";
   restartBtn.classList.add("pixel-btn", "restart-btn");
+  restartBtn.classList.add("pixel-btn", "restart-btn");
   restartBtn.addEventListener("click", () => {
-    overlay.remove();                // remove game over layer
+    overlay.remove();                // remove overlay
     gameContainer.innerHTML = "";    // clear the game area
-    startScreen.style.display = "flex"; // show main menu (Play/Guidance)
-});
+    startScreen.style.display = "flex"; // back to main menu
+  });
 
   overlay.appendChild(title);
   overlay.appendChild(scoreText);
@@ -106,6 +122,7 @@ function gameLoop(timestamp) {
       letterTimer = 0;
     }
 
+    // Increase speed over time
     if (elapsed > speedMultiplier * 5) {
       speedMultiplier += 0.2;
       letterInterval = Math.max(200, letterInterval - 20);
@@ -116,7 +133,7 @@ function gameLoop(timestamp) {
   requestAnimationFrame(gameLoop);
 }
 
-
+// Start/reset game
 function startGame() {
   score = 0;
   missed = 0;
@@ -127,6 +144,7 @@ function startGame() {
   letterTimer = 0;
   speedMultiplier = 1;
   letterInterval = 700;
+  gameStartTime = null;   // reset start time
 
    gameContainer.innerHTML = ""; //Replace all of the existing content in gomeContainer with new string, here I want to replace with empty string
   requestAnimationFrame(gameLoop);//make sure only play button is been clicked, the game will load
@@ -145,15 +163,25 @@ guidanceBtn.addEventListener("click", () => {
 document.addEventListener("keydown", (e) => {
   if (gameOver) return;
 
-  const pressedKey = e.key.toUpperCase(); //gets the character of the pressed key, converts it to uppercase, and compares it with the falling letters
+  const pressedKey = e.key.toUpperCase();
   const fallingLetters = document.querySelectorAll(".letter");
 
   for (let letter of fallingLetters) {
     if (letter.dataset.char === pressedKey) {
-      gameContainer.removeChild(letter);
-      score++;
-      updateStats();
-      return;
+      if (letter.classList.contains("danger")) {
+        // Typing a grey (aka danger) letter ends the game immediately
+        showGameOver();
+        gameOver = true;
+        return;
+      } else {
+        // Normal letter: +1 score
+        gameContainer.removeChild(letter);
+        score++;
+        updateStats();
+        return;
+      }
     }
   }
 });
+
+
